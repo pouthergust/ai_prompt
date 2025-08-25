@@ -91,8 +91,8 @@ export const usePromptStore = defineStore('prompt', () => {
       let bValue = b[filters.value.sortBy]
 
       if (filters.value.sortBy === 'title') {
-        aValue = aValue.toLowerCase()
-        bValue = bValue.toLowerCase()
+        aValue = String(aValue).toLowerCase()
+        bValue = String(bValue).toLowerCase()
       }
 
       if (filters.value.sortOrder === 'asc') {

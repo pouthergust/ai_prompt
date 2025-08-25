@@ -112,7 +112,7 @@ const onTemplateChange = () => {
         </div>
         
         <div v-else class="space-y-4">
-          <div v-for="(value, key) in variables" :key="key">
+          <div v-for="(_value, key) in variables" :key="key">
             <label class="block text-sm font-medium text-gray-300 mb-2">
               {{ key.charAt(0).toUpperCase() + key.slice(1).toLowerCase() }}
             </label>
