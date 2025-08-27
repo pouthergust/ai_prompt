@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useAIRecommendationStore, type AITool } from '../stores/aiRecommendationStore'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
