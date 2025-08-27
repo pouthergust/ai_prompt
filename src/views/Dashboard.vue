@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { usePromptStore } from '../stores/promptStore'
+import { useAIRecommendationStore } from '../stores/aiRecommendationStore'
 import PromptCard from '../components/PromptCard.vue'
+import AIRecommendationCard from '../components/AIRecommendationCard.vue'
 import { 
   DocumentTextIcon, 
   HeartIcon, 
   PlusIcon,
-  SparklesIcon 
+  SparklesIcon,
+  CpuChipIcon
 } from '@heroicons/vue/24/outline'
 
 const promptStore = usePromptStore()
+const aiStore = useAIRecommendationStore()
 
 onMounted(() => {
   promptStore.loadFromLocalStorage()
@@ -20,6 +24,10 @@ const stats = computed(() => ({
   favorites: promptStore.favoritePrompts.length,
   categories: [...new Set(promptStore.prompts.map(p => p.category))].length
 }))
+
+const popularAIs = computed(() => {
+  return aiStore.aiTools.filter(ai => ai.isPopular).slice(0, 3)
+})
 </script>
 
 <template>
@@ -84,6 +92,30 @@ const stats = computed(() => ({
         </RouterLink>
       </div>
       
+
+    <!-- Popular AI Tools -->
+    <div v-if="promptStore.prompts.length > 0">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-white flex items-center">
+          <CpuChipIcon class="h-6 w-6 mr-2 text-blue-400" />
+          IAs Populares
+        </h2>
+        <RouterLink
+          to="/ai-recommendations"
+          class="text-blue-400 hover:text-blue-300 text-sm transition-colors"
+        >
+          Ver todas →
+        </RouterLink>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <AIRecommendationCard
+          v-for="ai in popularAIs"
+          :key="ai.id"
+          :ai="ai"
+        />
+      </div>
+    </div>
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PromptCard
           v-for="prompt in promptStore.recentPrompts"

@@ -6,6 +6,7 @@ import {
   BookOpenIcon, 
   CogIcon,
   SparklesIcon,
+  CpuChipIcon,
   XMarkIcon
 } from '@heroicons/vue/24/outline'
 
@@ -22,6 +23,7 @@ const navItems = [
   { name: 'Criar Prompt', to: '/create', icon: PlusIcon },
   { name: 'Biblioteca', to: '/library', icon: BookOpenIcon },
   { name: 'Gerador', to: '/generator', icon: SparklesIcon },
+  { name: 'IAs Recomendadas', to: '/ai-recommendations', icon: CpuChipIcon },
   { name: 'Configurações', to: '/settings', icon: CogIcon }
 ]
 </script>
