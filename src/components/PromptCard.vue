@@ -10,13 +10,17 @@ import {
 } from '@heroicons/vue/24/outline'
 import { HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
 import { usePromptStore, type Prompt } from '../stores/promptStore'
+import { useAIRecommendationStore } from '../stores/aiRecommendationStore'
+import AIRecommendationCard from './AIRecommendationCard.vue'
 
 const props = defineProps<{
   prompt: Prompt
 }>()
 
 const promptStore = usePromptStore()
+const aiStore = useAIRecommendationStore()
 const isEditing = ref(false)
+const showRecommendations = ref(false)
 const editForm = ref({
   title: props.prompt.title,
   content: props.prompt.content,
@@ -64,6 +68,10 @@ const formatDate = (date: Date) => {
     hour: '2-digit',
     minute: '2-digit'
   }).format(date)
+}
+
+const getRecommendations = () => {
+  return aiStore.getRecommendationsForPrompt(props.prompt.category)
 }
 </script>
 
@@ -122,6 +130,26 @@ const formatDate = (date: Date) => {
         <span v-if="prompt.updatedAt > prompt.createdAt">
           • Editado em {{ formatDate(prompt.updatedAt) }}
         </span>
+      </div>
+
+      <!-- AI Recommendations Toggle -->
+      <div class="mt-4 pt-4 border-t border-gray-700">
+        <button
+          @click="showRecommendations = !showRecommendations"
+          class="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center space-x-1"
+        >
+          <span>{{ showRecommendations ? 'Ocultar' : 'Ver' }} IAs recomendadas</span>
+        </button>
+        
+        <div v-if="showRecommendations" class="mt-3 space-y-2">
+          <h5 class="text-sm font-medium text-gray-300">IAs ideais para esta categoria:</h5>
+          <AIRecommendationCard
+            v-for="ai in getRecommendations()"
+            :key="ai.id"
+            :ai="ai"
+            :compact="true"
+          />
+        </div>
       </div>
     </div>
 

@@ -6,6 +6,7 @@ import Library from '../views/Library.vue'
 import Settings from '../views/Settings.vue'
 import PromptGenerator from '../views/PromptGenerator.vue'
 import Login from '../views/Login.vue'
+import AIRecommendations from '../views/AIRecommendations.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -44,6 +45,12 @@ const router = createRouter({
       path: '/settings',
       name: 'settings',
       component: Settings,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/ai-recommendations',
+      name: 'ai-recommendations',
+      component: AIRecommendations,
       meta: { requiresAuth: true }
     }
   ]
