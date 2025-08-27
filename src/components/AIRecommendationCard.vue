@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAIRecommendationStore, type AITool } from '../stores/aiRecommendationStore'
+import { type AITool } from '../stores/aiRecommendationStore'
 import { 
   ArrowTopRightOnSquareIcon,
   StarIcon

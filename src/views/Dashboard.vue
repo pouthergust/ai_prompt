@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { usePromptStore } from '../stores/promptStore'
-import { useAIRecommendationStore } from '../stores/aiRecommendationStore'
 import PromptCard from '../components/PromptCard.vue'
 import AICarousel from '../components/AICarousel.vue'
 import { 
@@ -13,7 +12,6 @@ import {
 } from '@heroicons/vue/24/outline'
 
 const promptStore = usePromptStore()
-const aiStore = useAIRecommendationStore()
 
 onMounted(() => {
   promptStore.loadFromLocalStorage()

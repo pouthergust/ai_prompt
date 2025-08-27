@@ -7,7 +7,7 @@ const aiStore = useAIRecommendationStore()
 const carouselRef = ref<HTMLElement>()
 const currentIndex = ref(0)
 const itemsPerView = ref(5)
-const autoplayInterval = ref<NodeJS.Timeout>()
+const autoplayInterval = ref<ReturnType<typeof setInterval>>()
 
 // Responsive items per view
 const updateItemsPerView = () => {
