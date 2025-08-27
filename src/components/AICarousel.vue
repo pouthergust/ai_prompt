@@ -6,7 +6,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 const aiStore = useAIRecommendationStore()
 const carouselRef = ref<HTMLElement>()
 const currentIndex = ref(0)
-const itemsPerView = ref(4)
+const itemsPerView = ref(5)
 const autoplayInterval = ref<NodeJS.Timeout>()
 
 // Responsive items per view
@@ -19,7 +19,7 @@ const updateItemsPerView = () => {
   } else if (width < 1024) {
     itemsPerView.value = 3
   } else {
-    itemsPerView.value = 4
+    itemsPerView.value = 5
   }
 }
 
@@ -96,9 +96,9 @@ const openAI = (ai: AITool) => {
         >
           <div
             @click="openAI(ai)"
-            class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+            class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-blue-400 hover:shadow-lg transition-all duration-200 cursor-pointer group"
           >
-            <div class="flex flex-col items-center text-center space-y-3">
+            <div class="flex gap-4 items-center text-center">
               <!-- Logo -->
               <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-700 flex-shrink-0">
                 <img
@@ -108,15 +108,17 @@ const openAI = (ai: AITool) => {
                 />
               </div>
               
-              <!-- Name -->
-              <h3 class="text-white font-medium text-sm group-hover:text-blue-400 transition-colors">
-                {{ ai.name }}
-              </h3>
-              
-              <!-- Category -->
-              <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs group-hover:bg-gray-600 transition-colors">
-                {{ ai.category }}
-              </span>
+              <div class="flex flex-col justify-start margin">
+                  <!-- Name -->
+                  <h3 class="text-white font-medium text-sm group-hover:text-blue-400 transition-colors text-left pb-2">
+                    {{ ai.name }}
+                  </h3>
+                  
+                  <!-- Category -->
+                  <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs group-hover:bg-gray-600 transition-colors">
+                    {{ ai.category }}
+                  </span>
+              </div>
             </div>
           </div>
         </div>
