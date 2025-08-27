@@ -2,13 +2,13 @@
 import { onMounted, computed } from 'vue'
 import { usePromptStore } from '../stores/promptStore'
 import PromptCard from '../components/PromptCard.vue'
-import AICarousel from '../components/AICarousel.vue'
+// import AICarousel from '../components/AICarousel.vue'
 import { 
   DocumentTextIcon, 
   HeartIcon, 
   PlusIcon,
   SparklesIcon,
-  CpuChipIcon
+  // CpuChipIcon
 } from '@heroicons/vue/24/outline'
 
 const promptStore = usePromptStore()
@@ -88,7 +88,7 @@ const stats = computed(() => ({
       <AICarousel />
     </div>
     -->
-    
+
     <!-- Recent Prompts -->
     <div>
       <h2 class="text-xl font-semibold text-white mb-4">Prompts Recentes</h2>
