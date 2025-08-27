@@ -70,7 +70,7 @@ const stats = computed(() => ({
       </div>
     </div>
 
-    <!-- AI Tools Carousel -->
+    <!-- AI Tools Carousel 
     <div>
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold text-white flex items-center">
@@ -87,7 +87,8 @@ const stats = computed(() => ({
       
       <AICarousel />
     </div>
-
+    -->
+    
     <!-- Recent Prompts -->
     <div>
       <h2 class="text-xl font-semibold text-white mb-4">Prompts Recentes</h2>
