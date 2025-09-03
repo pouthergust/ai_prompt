@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useClerk, useUser } from '@clerk/vue'
 
 export interface User {
   id: string
@@ -9,127 +10,57 @@ export interface User {
 }
 
 export const useAuthStore = defineStore('auth', () => {
+  const clerk = useClerk()
+  const { isSignedIn, user: clerkUser, isLoaded } = useUser()
+  
   const user = ref<User | null>(null)
   const isLoading = ref(false)
 
-  const isAuthenticated = computed(() => user.value !== null)
+  const isAuthenticated = computed(() => isSignedIn.value)
 
-  // Simular usuários cadastrados (em produção seria uma API)
-  const registeredUsers = ref([
-    {
-      id: '1',
-      email: 'admin@example.com',
-      password: 'admin123',
-      name: 'Administrador',
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      email: 'user@example.com',
-      password: 'user123',
-      name: 'Usuário',
-      createdAt: new Date()
-    }
-  ])
-
+  // Métodos de autenticação usando Clerk - simplificados
+  // Nota: Os métodos de login e register agora são gerenciados diretamente nos componentes
+  // usando useSignIn e useSignUp do Clerk
   const login = async (email: string, password: string) => {
-    isLoading.value = true
-    
-    try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      const foundUser = registeredUsers.value.find(
-        u => u.email === email && u.password === password
-      )
-      
-      if (foundUser) {
-        user.value = {
-          id: foundUser.id,
-          email: foundUser.email,
-          name: foundUser.name,
-          createdAt: foundUser.createdAt
-        }
-        
-        // Salvar no localStorage
-        localStorage.setItem('auth-user', JSON.stringify(user.value))
-        return { success: true }
-      } else {
-        return { success: false, error: 'Email ou senha incorretos' }
-      }
-    } catch (error) {
-      return { success: false, error: 'Erro interno do servidor' }
-    } finally {
-      isLoading.value = false
-    }
+    // Este método é mantido para compatibilidade, mas o login real
+    // é feito diretamente no componente Login.vue usando useSignIn
+    return { success: true }
   }
 
   const register = async (email: string, password: string, name: string) => {
-    isLoading.value = true
-    
-    try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Verificar se email já existe
-      const existingUser = registeredUsers.value.find(u => u.email === email)
-      if (existingUser) {
-        return { success: false, error: 'Email já cadastrado' }
-      }
-      
-      // Criar novo usuário
-      const newUser = {
-        id: Date.now().toString(),
-        email,
-        password,
-        name,
-        createdAt: new Date()
-      }
-      
-      registeredUsers.value.push(newUser)
-      
+    // Este método é mantido para compatibilidade, mas o registro real
+    // é feito diretamente no componente Login.vue usando useSignUp
+    return { success: true }
+  }
+  
+  // Função para atualizar o usuário local com dados do Clerk
+  const updateUserFromClerk = () => {
+    if (clerkUser.value) {
       user.value = {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-        createdAt: newUser.createdAt
+        id: clerkUser.value.id,
+        email: clerkUser.value.primaryEmailAddress?.emailAddress || '',
+        name: `${clerkUser.value.firstName || ''} ${clerkUser.value.lastName || ''}`.trim(),
+        createdAt: new Date(clerkUser.value.createdAt)
       }
-      
-      // Salvar no localStorage
-      localStorage.setItem('auth-user', JSON.stringify(user.value))
-      localStorage.setItem('registered-users', JSON.stringify(registeredUsers.value))
-      
-      return { success: true }
-    } catch (error) {
-      return { success: false, error: 'Erro interno do servidor' }
-    } finally {
-      isLoading.value = false
+    } else {
+      user.value = null
     }
   }
 
-  const logout = () => {
-    user.value = null
-    localStorage.removeItem('auth-user')
+  const logout = async () => {
+    try {
+      await clerk.value.signOut()
+      user.value = null
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
+    }
   }
 
   const loadFromStorage = () => {
-    const storedUser = localStorage.getItem('auth-user')
-    const storedRegisteredUsers = localStorage.getItem('registered-users')
-    
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser)
-      user.value = {
-        ...parsed,
-        createdAt: new Date(parsed.createdAt)
-      }
-    }
-    
-    if (storedRegisteredUsers) {
-      const parsed = JSON.parse(storedRegisteredUsers)
-      registeredUsers.value = parsed.map((u: any) => ({
-        ...u,
-        createdAt: new Date(u.createdAt)
-      }))
+    // Com o Clerk, não precisamos mais carregar do localStorage
+    // O Clerk gerencia o estado de autenticação automaticamente
+    if (isLoaded.value && isSignedIn.value) {
+      updateUserFromClerk()
     }
   }
 
@@ -140,6 +71,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     register,
     logout,
-    loadFromStorage
+    loadFromStorage,
+    updateUserFromClerk
   }
 })

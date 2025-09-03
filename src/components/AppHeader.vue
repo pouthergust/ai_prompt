@@ -2,8 +2,9 @@
 import { Bars3Icon, MagnifyingGlassIcon, UserIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { usePromptStore } from '../stores/promptStore'
 import { useAuthStore } from '../stores/authStore'
+import { useUser, useClerk } from '@clerk/vue'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 defineEmits<{
   toggleSidebar: []
@@ -12,12 +13,41 @@ defineEmits<{
 const promptStore = usePromptStore()
 const authStore = useAuthStore()
 const router = useRouter()
+const clerk = useClerk()
+const { user } = useUser()
 const showUserMenu = ref(false)
 
-const logout = () => {
-  authStore.logout()
-  router.push('/login')
-  showUserMenu.value = false
+// Computar o nome de exibição do usuário
+const displayName = computed(() => {
+  if (user.value) {
+    return `${user.value.firstName || ''} ${user.value.lastName || ''}`.trim() || user.value.primaryEmailAddress?.emailAddress
+  }
+  return ''
+})
+
+// Computar o email do usuário
+const userEmail = computed(() => {
+  return user.value?.primaryEmailAddress?.emailAddress || ''
+})
+
+const logout = async () => {
+  try {
+    showUserMenu.value = false
+    
+    // Fazer logout no Clerk
+    await clerk.value.signOut()
+    
+    // Limpar dados do authStore
+    authStore.logout()
+    
+    // Redirecionar para login
+    await router.push('/login')
+    
+  } catch (error) {
+    console.error('Erro ao fazer logout:', error)
+  } finally {
+    showUserMenu.value = false
+  }
 }
 </script>
 
@@ -52,7 +82,7 @@ const logout = () => {
             class="flex items-center space-x-2 p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
           >
             <UserIcon class="h-6 w-6" />
-            <span class="hidden md:block text-sm">{{ authStore.user?.name }}</span>
+            <span class="hidden md:block text-sm">{{ displayName }}</span>
           </button>
           
           <!-- Dropdown Menu -->
@@ -61,8 +91,8 @@ const logout = () => {
             class="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50"
           >
             <div class="px-4 py-3 border-b border-gray-700">
-              <p class="text-sm text-white font-medium">{{ authStore.user?.name }}</p>
-              <p class="text-xs text-gray-400">{{ authStore.user?.email }}</p>
+              <p class="text-sm text-white font-medium">{{ displayName }}</p>
+              <p class="text-xs text-gray-400">{{ userEmail }}</p>
             </div>
             <button
               @click="logout"
