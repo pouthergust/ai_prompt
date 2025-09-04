@@ -9,5 +9,15 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    cors: true,
+    proxy: {
+      '/api': {
+        target: 'https://lionfish-app-w54yf.ondigitalocean.app',
+        changeOrigin: true,
+        secure: true
+      }
+    }
   }
 })

@@ -6,7 +6,7 @@ const API_BASE_URL = 'https://lionfish-app-w54yf.ondigitalocean.app/api'
 // Criar instância do Axios
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.DEV 
-    ? 'http://localhost:3000/api'  // Development API URL
+    ? '/api'                       // Use Vite proxy in development
     : API_BASE_URL,                // Production API URL
   timeout: 15000, // Aumentado para 15s
   headers: {
