@@ -2,11 +2,13 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestCo
 import { useRouter } from 'vue-router'
 
 // Configuração base da API
-const API_BASE_URL = 'http://localhost:4000/api'
+const API_BASE_URL = 'https://lionfish-app-w54yf.ondigitalocean.app/api'
 
 // Criar instância do Axios
 const api: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.DEV 
+    ? 'http://localhost:3000/api'  // Development API URL
+    : API_BASE_URL,                // Production API URL
   timeout: 15000, // Aumentado para 15s
   headers: {
     'Content-Type': 'application/json',
