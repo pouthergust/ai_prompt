@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
-import { useClerk, useUser } from '@clerk/vue'
 import Dashboard from '../views/Dashboard.vue'
 import CreatePrompt from '../views/CreatePrompt.vue'
 import Library from '../views/Library.vue'
@@ -58,34 +57,20 @@ const router = createRouter({
 })
 
 // Navigation guards
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore()
-  const { isSignedIn, isLoaded } = useUser()
   
-  // Esperar até que o Clerk carregue
-  if (!isLoaded.value) {
-    // Aguardar até que o Clerk termine de carregar
-    await new Promise<void>((resolve) => {
-      const checkLoaded = () => {
-        if (isLoaded.value) {
-          resolve()
-        } else {
-          setTimeout(checkLoaded, 50)
-        }
-      }
-      checkLoaded()
-    })
+  // Carregar dados do localStorage na primeira navegação
+  if (!authStore.user) {
+    authStore.loadFromStorage()
   }
-  
-  // Atualizar o usuário local com dados do Clerk
-  authStore.updateUserFromClerk()
   
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
   
-  if (requiresAuth && !isSignedIn.value) {
+  if (requiresAuth && !authStore.isAuthenticated) {
     next('/login')
-  } else if (requiresGuest && isSignedIn.value) {
+  } else if (requiresGuest && authStore.isAuthenticated) {
     next('/')
   } else {
     next()
