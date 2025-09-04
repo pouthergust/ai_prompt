@@ -42,8 +42,8 @@ const cancelEdit = () => {
   isEditing.value = false
 }
 
-const saveEdit = () => {
-  promptStore.updatePrompt(props.prompt.id, {
+const saveEdit = async () => {
+  await promptStore.updatePrompt(props.prompt.id, {
     title: editForm.value.title,
     content: editForm.value.content,
     category: editForm.value.category,
@@ -58,6 +58,14 @@ const copyPrompt = async () => {
     // Você pode adicionar uma notificação aqui
     console.log('Prompt copiado!')
   }
+}
+
+const toggleFavorite = async () => {
+  await promptStore.toggleFavorite(props.prompt.id)
+}
+
+const deletePrompt = async () => {
+  await promptStore.deletePrompt(props.prompt.id)
 }
 
 const formatDate = (date: Date) => {
@@ -82,7 +90,7 @@ const getRecommendations = () => {
         <h3 class="text-lg font-semibold text-white">{{ prompt.title }}</h3>
         <div class="flex space-x-2">
           <button
-            @click="promptStore.toggleFavorite(prompt.id)"
+            @click="toggleFavorite"
             class="p-2 rounded-lg transition-colors"
             :class="prompt.isFavorite ? 'text-red-400 hover:text-red-300' : 'text-gray-400 hover:text-red-400'"
           >
@@ -102,7 +110,7 @@ const getRecommendations = () => {
             <PencilIcon class="h-5 w-5" />
           </button>
           <button
-            @click="promptStore.deletePrompt(prompt.id)"
+            @click="deletePrompt"
             class="p-2 rounded-lg text-gray-400 hover:text-red-400 transition-colors"
           >
             <TrashIcon class="h-5 w-5" />

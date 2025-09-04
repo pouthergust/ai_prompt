@@ -26,7 +26,7 @@ const submitForm = async () => {
   isSubmitting.value = true
 
   try {
-    promptStore.addPrompt({
+    await promptStore.addPrompt({
       title: form.value.title,
       content: form.value.content,
       category: form.value.category,

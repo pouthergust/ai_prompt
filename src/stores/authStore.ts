@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import authService, { LoginCredentials, RegisterData, UserProfile } from '../services/authService'
 
 export interface User {
   id: string
@@ -11,135 +12,130 @@ export interface User {
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const isLoading = ref(false)
+  const error = ref<string | null>(null)
 
-  const isAuthenticated = computed(() => user.value !== null)
+  const isAuthenticated = computed(() => {
+    return !!user.value && authService.isAuthenticated()
+  })
 
-  // Simular usuários cadastrados (em produção seria uma API)
-  const registeredUsers = ref([
-    {
-      id: '1',
-      email: 'admin@example.com',
-      password: 'admin123',
-      name: 'Administrador',
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      email: 'user@example.com',
-      password: 'user123',
-      name: 'Usuário',
-      createdAt: new Date()
-    }
-  ])
-
-  const login = async (email: string, password: string) => {
-    isLoading.value = true
-    
+  /**
+   * Fazer login do usuário
+   */
+  const login = async (credentials: LoginCredentials) => {
     try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      isLoading.value = true
+      error.value = null
       
-      const foundUser = registeredUsers.value.find(
-        u => u.email === email && u.password === password
-      )
-      
-      if (foundUser) {
-        user.value = {
-          id: foundUser.id,
-          email: foundUser.email,
-          name: foundUser.name,
-          createdAt: foundUser.createdAt
-        }
-        
-        // Salvar no localStorage
-        localStorage.setItem('auth-user', JSON.stringify(user.value))
-        return { success: true }
-      } else {
-        return { success: false, error: 'Email ou senha incorretos' }
-      }
-    } catch (error) {
-      return { success: false, error: 'Erro interno do servidor' }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const register = async (email: string, password: string, name: string) => {
-    isLoading.value = true
-    
-    try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Verificar se email já existe
-      const existingUser = registeredUsers.value.find(u => u.email === email)
-      if (existingUser) {
-        return { success: false, error: 'Email já cadastrado' }
-      }
-      
-      // Criar novo usuário
-      const newUser = {
-        id: Date.now().toString(),
-        email,
-        password,
-        name,
-        createdAt: new Date()
-      }
-      
-      registeredUsers.value.push(newUser)
+      const authResponse = await authService.login(credentials)
       
       user.value = {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-        createdAt: newUser.createdAt
+        id: authResponse.user.id,
+        email: authResponse.user.email,
+        name: authResponse.user.name,
+        createdAt: new Date(authResponse.user.createdAt)
       }
       
-      // Salvar no localStorage
-      localStorage.setItem('auth-user', JSON.stringify(user.value))
-      localStorage.setItem('registered-users', JSON.stringify(registeredUsers.value))
-      
-      return { success: true }
-    } catch (error) {
-      return { success: false, error: 'Erro interno do servidor' }
+      return authResponse
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Erro ao fazer login'
+      throw err
     } finally {
       isLoading.value = false
     }
   }
 
+  /**
+   * Registrar novo usuário
+   */
+  const register = async (userData: RegisterData) => {
+    try {
+      isLoading.value = true
+      error.value = null
+      
+      const authResponse = await authService.register(userData)
+      
+      user.value = {
+        id: authResponse.user.id,
+        email: authResponse.user.email,
+        name: authResponse.user.name,
+        createdAt: new Date(authResponse.user.createdAt)
+      }
+      
+      return authResponse
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Erro ao registrar usuário'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Obter perfil do usuário atual
+   */
+  const fetchProfile = async () => {
+    try {
+      isLoading.value = true
+      error.value = null
+      
+      const profile = await authService.getProfile()
+      
+      user.value = {
+        id: profile.id,
+        email: profile.email,
+        name: profile.name,
+        createdAt: new Date(profile.createdAt)
+      }
+      
+      return profile
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Erro ao obter perfil'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Fazer logout do usuário
+   */
   const logout = () => {
+    authService.logout()
     user.value = null
-    localStorage.removeItem('auth-user')
+    error.value = null
   }
 
-  const loadFromStorage = () => {
-    const storedUser = localStorage.getItem('auth-user')
-    const storedRegisteredUsers = localStorage.getItem('registered-users')
-    
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser)
-      user.value = {
-        ...parsed,
-        createdAt: new Date(parsed.createdAt)
+  /**
+   * Inicializar store - verificar se há token válido
+   */
+  const initialize = async () => {
+    if (authService.isAuthenticated()) {
+      try {
+        await fetchProfile()
+      } catch (err) {
+        // Token inválido ou expirado, fazer logout
+        logout()
       }
     }
-    
-    if (storedRegisteredUsers) {
-      const parsed = JSON.parse(storedRegisteredUsers)
-      registeredUsers.value = parsed.map((u: any) => ({
-        ...u,
-        createdAt: new Date(u.createdAt)
-      }))
-    }
+  }
+
+  /**
+   * Limpar erro
+   */
+  const clearError = () => {
+    error.value = null
   }
 
   return {
     user,
     isLoading,
+    error,
     isAuthenticated,
     login,
     register,
+    fetchProfile,
     logout,
-    loadFromStorage
+    initialize,
+    clearError
   }
 })

@@ -11,9 +11,7 @@ const sidebarOpen = ref(false)
 
 const isLoginPage = computed(() => route.name === 'login')
 
-onMounted(() => {
-  authStore.loadFromStorage()
-})
+// Inicialização do authStore agora é feita no main.ts
 
 const toggleSidebar = () => {
   sidebarOpen.value = !sidebarOpen.value

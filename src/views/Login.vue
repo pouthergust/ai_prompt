@@ -45,12 +45,15 @@ const handleLogin = async () => {
     return
   }
   
-  const result = await authStore.login(loginForm.value.email, loginForm.value.password)
-  
-  if (result.success) {
+  try {
+    await authStore.login({
+      email: loginForm.value.email,
+      password: loginForm.value.password
+    })
+    
     router.push('/')
-  } else {
-    error.value = result.error || 'Erro ao fazer login'
+  } catch (err) {
+    error.value = authStore.error || 'Erro ao fazer login'
   }
 }
 
@@ -72,16 +75,16 @@ const handleRegister = async () => {
     return
   }
   
-  const result = await authStore.register(
-    registerForm.value.email,
-    registerForm.value.password,
-    registerForm.value.name
-  )
-  
-  if (result.success) {
+  try {
+    await authStore.register({
+      name: registerForm.value.name,
+      email: registerForm.value.email,
+      password: registerForm.value.password
+    })
+    
     router.push('/')
-  } else {
-    error.value = result.error || 'Erro ao criar conta'
+  } catch (err) {
+    error.value = authStore.error || 'Erro ao criar conta'
   }
 }
 

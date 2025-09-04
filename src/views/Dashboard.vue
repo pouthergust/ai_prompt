@@ -13,8 +13,8 @@ import {
 
 const promptStore = usePromptStore()
 
-onMounted(() => {
-  promptStore.loadFromLocalStorage()
+onMounted(async () => {
+  await promptStore.fetchPrompts()
 })
 
 const stats = computed(() => ({
