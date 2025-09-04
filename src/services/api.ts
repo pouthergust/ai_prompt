@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { useRouter } from 'vue-router'
 
 // Configuração base da API
 const API_BASE_URL = 'https://lionfish-app-w54yf.ondigitalocean.app/api'
@@ -56,8 +55,6 @@ api.interceptors.response.use(
     return response
   },
   async (error: AxiosError) => {
-    const originalRequest = error.config
-    
     // Log detalhado do erro
     console.error('❌ API Error:', {
       status: error.response?.status,
@@ -98,7 +95,7 @@ api.interceptors.response.use(
       console.warn('🔍 Recurso não encontrado')
     }
     
-    if (error.response?.status >= 500) {
+    if (error.response?.status && error.response.status >= 500) {
       console.error('🔥 Erro interno do servidor')
     }
     

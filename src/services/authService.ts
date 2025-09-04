@@ -1,4 +1,4 @@
-import api, { ApiResponse, handleApiError } from './api'
+import api, { ApiResponse, handleApiError, ApiError } from './api'
 import { AxiosError } from 'axios'
 
 // Interfaces para autenticação
@@ -46,7 +46,7 @@ class AuthService {
       
       return authData
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -66,7 +66,7 @@ class AuthService {
       
       return authData
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -79,7 +79,7 @@ class AuthService {
       const response = await api.get<ApiResponse<UserProfile>>('/auth/me')
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }

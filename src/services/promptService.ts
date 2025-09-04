@@ -1,4 +1,4 @@
-import api, { ApiResponse, handleApiError } from './api'
+import api, { ApiResponse, handleApiError, ApiError } from './api'
 import { AxiosError } from 'axios'
 
 // Interfaces para prompts
@@ -46,7 +46,7 @@ class PromptService {
       })
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -59,20 +59,20 @@ class PromptService {
       const response = await api.post<ApiResponse<Prompt>>('/prompts', promptData)
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
 
   /**
-   * Obter prompt específico por ID
+   * Obter um prompt específico por ID
    */
   async getPromptById(id: string): Promise<Prompt> {
     try {
       const response = await api.get<ApiResponse<Prompt>>(`/prompts/${id}`)
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -85,19 +85,19 @@ class PromptService {
       const response = await api.put<ApiResponse<Prompt>>(`/prompts/${id}`, promptData)
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
 
   /**
-   * Deletar prompt
+   * Deletar um prompt
    */
   async deletePrompt(id: string): Promise<void> {
     try {
       await api.delete(`/prompts/${id}`)
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -110,7 +110,7 @@ class PromptService {
       const response = await api.get<ApiResponse<Prompt[]>>(`/prompts/search/${encodeURIComponent(term)}`)
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -123,7 +123,7 @@ class PromptService {
       const response = await api.get<ApiResponse<Prompt[]>>(`/prompts/category/${encodeURIComponent(category)}`)
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -136,7 +136,7 @@ class PromptService {
       const response = await api.get<ApiResponse<Prompt[]>>('/prompts/favorites')
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -149,7 +149,7 @@ class PromptService {
       const response = await api.patch<ApiResponse<Prompt>>(`/prompts/${id}/favorite`)
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }
@@ -162,7 +162,7 @@ class PromptService {
       const response = await api.get<ApiResponse<{ status: string; timestamp: string }>>('/health')
       return response.data.data
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError)
+      const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
     }
   }

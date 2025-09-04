@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import * as promptService from '@/services/promptService'
-import type { Prompt as ApiPrompt, CreatePromptData, UpdatePromptData } from '@/services/promptService'
+import promptService from '../services/promptService'
+import type { Prompt as ApiPrompt, CreatePromptData, UpdatePromptData } from '../services/promptService'
 
 export interface Prompt {
   id: string
@@ -133,8 +133,8 @@ export const usePromptStore = defineStore('prompt', () => {
       isLoading.value = true
       error.value = null
       
-      const apiPrompts = await promptService.getPrompts()
-      prompts.value = apiPrompts.map(convertApiPromptToFrontend)
+      const apiResponse = await promptService.getPrompts()
+      prompts.value = apiResponse.prompts.map(convertApiPromptToFrontend)
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Erro ao carregar prompts'
       throw err

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import authService, { LoginCredentials, RegisterData, UserProfile } from '../services/authService'
+import authService, { LoginCredentials, RegisterData } from '../services/authService'
 
 export interface User {
   id: string
