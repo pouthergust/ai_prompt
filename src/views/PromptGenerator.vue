@@ -29,10 +29,10 @@ const copyGenerated = async () => {
   }
 }
 
-const saveGenerated = () => {
+const saveGenerated = async () => {
   if (generatedPrompt.value) {
     const template = promptStore.templates.find(t => t.id === selectedTemplate.value)
-    promptStore.addPrompt({
+    await promptStore.addPrompt({
       title: `${template?.name || 'Prompt'} - ${new Date().toLocaleDateString()}`,
       content: generatedPrompt.value,
       category: 'Gerado',

@@ -60,10 +60,7 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore()
   
-  // Carregar dados do localStorage na primeira navegação
-  if (!authStore.user) {
-    authStore.loadFromStorage()
-  }
+  // Inicialização do authStore é feita no main.ts
   
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const requiresGuest = to.matched.some(record => record.meta.requiresGuest)

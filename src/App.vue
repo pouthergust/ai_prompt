@@ -2,18 +2,14 @@
 import { RouterView, useRoute } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import AppSidebar from './components/AppSidebar.vue'
-import { ref, computed, onMounted } from 'vue'
-import { useAuthStore } from './stores/authStore'
+import { ref, computed } from 'vue'
 
 const route = useRoute()
-const authStore = useAuthStore()
 const sidebarOpen = ref(false)
 
 const isLoginPage = computed(() => route.name === 'login')
 
-onMounted(() => {
-  authStore.loadFromStorage()
-})
+// Inicialização do authStore agora é feita no main.ts
 
 const toggleSidebar = () => {
   sidebarOpen.value = !sidebarOpen.value

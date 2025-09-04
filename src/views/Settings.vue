@@ -32,20 +32,20 @@ const importData = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
     const reader = new FileReader()
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const data = JSON.parse(e.target?.result as string)
         if (data.prompts && Array.isArray(data.prompts)) {
           // Merge with existing prompts
-          data.prompts.forEach((prompt: any) => {
-            promptStore.addPrompt({
+          for (const prompt of data.prompts) {
+            await promptStore.addPrompt({
               title: prompt.title,
               content: prompt.content,
               category: prompt.category || 'Outros',
               tags: prompt.tags || [],
               isFavorite: prompt.isFavorite || false
             })
-          })
+          }
           alert('Dados importados com sucesso!')
         }
       } catch (error) {
