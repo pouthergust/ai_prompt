@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 // Configuração base da API
-const API_BASE_URL = 'https://lionfish-app-w54yf.ondigitalocean.app/api'
+// const API_BASE_URL = 'https://lionfish-app-w54yf.ondigitalocean.app/api'
+const API_BASE_URL = 'https://ai-prompt-backend-pwqv.onrender.com/api'
 
 // Criar instância do Axios
 const api: AxiosInstance = axios.create({
