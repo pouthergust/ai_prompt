@@ -1,50 +1,17 @@
-import api, { ApiResponse, handleApiError, ApiError } from './api'
+import api, { handleApiError } from './api'
 import { AxiosError } from 'axios'
-
-// Interfaces para prompts
-export interface Prompt {
-  id: string
-  title: string
-  content: string
-  category: string
-  tags: string[]
-  is_favorite: boolean
-  created_at: string
-  updated_at: string
-  user_id: string
-}
-
-export interface CreatePromptData {
-  title: string
-  content: string
-  category: string
-  tags: string[]
-}
-
-export interface UpdatePromptData {
-  title?: string
-  content?: string
-  category?: string
-  tags?: string[]
-}
-
-export interface PromptListResponse {
-  prompts: Prompt[]
-  total: number
-  page: number
-  limit: number
-}
+import type { ApiPrompt, CreatePromptData, UpdatePromptData, ApiResponse, ApiError} from '../types'
 
 class PromptService {
   /**
    * Listar todos os prompts do usuário
    */
-  async getPrompts(page = 1, limit = 10): Promise<PromptListResponse> {
+  async getPrompts(page = 1, limit = 10): Promise<ApiPrompt[]> {
     try {
-      const response = await api.get<ApiResponse<PromptListResponse>>('/prompts', {
+      const response = await api.get<ApiPrompt[]>('/prompts', {
         params: { page, limit }
       })
-      return response.data.data
+      return response.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)
@@ -54,9 +21,9 @@ class PromptService {
   /**
    * Criar novo prompt
    */
-  async createPrompt(promptData: CreatePromptData): Promise<Prompt> {
+  async createPrompt(promptData: CreatePromptData): Promise<ApiPrompt> {
     try {
-      const response = await api.post<ApiResponse<Prompt>>('/prompts', promptData)
+      const response = await api.post<ApiResponse<ApiPrompt>>('/prompts', promptData)
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
@@ -67,9 +34,9 @@ class PromptService {
   /**
    * Obter um prompt específico por ID
    */
-  async getPromptById(id: string): Promise<Prompt> {
+  async getPromptById(id: string): Promise<ApiPrompt> {
     try {
-      const response = await api.get<ApiResponse<Prompt>>(`/prompts/${id}`)
+      const response = await api.get<ApiResponse<ApiPrompt>>(`/prompts/${id}`)
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
@@ -80,9 +47,9 @@ class PromptService {
   /**
    * Atualizar prompt completo
    */
-  async updatePrompt(id: string, promptData: UpdatePromptData): Promise<Prompt> {
+  async updatePrompt(id: string, promptData: UpdatePromptData): Promise<ApiPrompt> {
     try {
-      const response = await api.put<ApiResponse<Prompt>>(`/prompts/${id}`, promptData)
+      const response = await api.put<ApiResponse<ApiPrompt>>(`/prompts/${id}`, promptData)
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
@@ -105,9 +72,9 @@ class PromptService {
   /**
    * Buscar prompts por termo
    */
-  async searchPrompts(term: string): Promise<Prompt[]> {
+  async searchPrompts(term: string): Promise<ApiPrompt[]> {
     try {
-      const response = await api.get<ApiResponse<Prompt[]>>(`/prompts/search/${encodeURIComponent(term)}`)
+      const response = await api.get<ApiResponse<ApiPrompt[]>>(`/prompts/search/${encodeURIComponent(term)}`)
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
@@ -118,9 +85,9 @@ class PromptService {
   /**
    * Filtrar prompts por categoria
    */
-  async getPromptsByCategory(category: string): Promise<Prompt[]> {
+  async getPromptsByCategory(category: string): Promise<ApiPrompt[]> {
     try {
-      const response = await api.get<ApiResponse<Prompt[]>>(`/prompts/category/${encodeURIComponent(category)}`)
+      const response = await api.get<ApiResponse<ApiPrompt[]>>(`/prompts/category/${encodeURIComponent(category)}`)
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
@@ -131,9 +98,9 @@ class PromptService {
   /**
    * Listar prompts favoritos
    */
-  async getFavoritePrompts(): Promise<Prompt[]> {
+  async getFavoritePrompts(): Promise<ApiPrompt[]> {
     try {
-      const response = await api.get<ApiResponse<Prompt[]>>('/prompts/favorites')
+      const response = await api.get<ApiResponse<ApiPrompt[]>>('/prompts/favorites')
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
@@ -144,9 +111,9 @@ class PromptService {
   /**
    * Alternar status de favorito
    */
-  async toggleFavorite(id: string): Promise<Prompt> {
+  async toggleFavorite(id: string): Promise<ApiPrompt> {
     try {
-      const response = await api.patch<ApiResponse<Prompt>>(`/prompts/${id}/favorite`)
+      const response = await api.patch<ApiResponse<ApiPrompt>>(`/prompts/${id}/favorite`)
       return response.data.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)

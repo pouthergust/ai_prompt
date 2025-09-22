@@ -1,14 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios'
-
-// Configuração base da API
-const API_BASE_URL = 'https://lionfish-app-w54yf.ondigitalocean.app/api'
+import type { ApiResponse, ApiError } from '../types'
 
 // Criar instância do Axios
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.DEV 
-    ? '/api'                       // Use Vite proxy in development
-    : API_BASE_URL,                // Production API URL
-  timeout: 15000, // Aumentado para 15s
+  baseURL: 'https://ai-prompt-backend-pwqv.onrender.com/api',                // Production API URL
+  // timeout: 15000, // Aumentado para 15s
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -71,12 +67,12 @@ api.interceptors.response.use(
         isRedirecting = true
         
         // Limpar dados de autenticação
-        localStorage.removeItem('auth_token')
-        localStorage.removeItem('user_data')
+        // localStorage.removeItem('auth_token')
+        // localStorage.removeItem('user_data')
         
         // Redirecionar para login
         if (typeof window !== 'undefined') {
-          window.location.href = '/login'
+          // window.location.href = '/login'
         }
         
         // Reset flag após um tempo
@@ -109,19 +105,6 @@ api.interceptors.response.use(
 )
 
 export default api
-
-// Tipos para as respostas da API
-export interface ApiResponse<T = any> {
-  data: T
-  message?: string
-  success: boolean
-}
-
-export interface ApiError {
-  message: string
-  statusCode: number
-  error?: string
-}
 
 // Helper para extrair dados das respostas
 export const extractData = <T>(response: AxiosResponse<ApiResponse<T>>): T => {

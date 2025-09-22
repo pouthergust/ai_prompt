@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import promptService from '../services/promptService'
-import type { Prompt as ApiPrompt, CreatePromptData, UpdatePromptData } from '../services/promptService'
-
-export interface Prompt {
-  id: string
-  title: string
-  content: string
-  category: string
-  tags: string[]
-  isFavorite: boolean
-  createdAt: Date
-  updatedAt: Date
-}
+import type { ApiPrompt, Prompt, CreatePromptData, UpdatePromptData, PromptFilter } from '../types'
 
 // Função para converter dados da API para o formato do frontend
 const convertApiPromptToFrontend = (apiPrompt: ApiPrompt): Prompt => ({
@@ -25,14 +14,6 @@ const convertApiPromptToFrontend = (apiPrompt: ApiPrompt): Prompt => ({
   createdAt: new Date(apiPrompt.created_at),
   updatedAt: new Date(apiPrompt.updated_at)
 })
-
-export interface PromptFilter {
-  search: string
-  category: string
-  showFavorites: boolean
-  sortBy: 'createdAt' | 'updatedAt' | 'title'
-  sortOrder: 'asc' | 'desc'
-}
 
 export const usePromptStore = defineStore('prompt', () => {
   const prompts = ref<Prompt[]>([])
@@ -61,19 +42,22 @@ export const usePromptStore = defineStore('prompt', () => {
       id: '1',
       name: 'Análise de Código',
       description: 'Template para análise e revisão de código',
-      content: 'Analise o seguinte código e forneça feedback sobre: 1) Qualidade do código, 2) Possíveis melhorias, 3) Bugs potenciais, 4) Padrões de design:\n\n[CÓDIGO]'
+      content: 'Analise o seguinte código e forneça feedback sobre: 1) Qualidade do código, 2) Possíveis melhorias, 3) Bugs potenciais, 4) Padrões de design:\n\n[CÓDIGO]',
+      category: 'Desenvolvimento'
     },
     {
       id: '2',
       name: 'Criação de Conteúdo',
       description: 'Template para criação de conteúdo de marketing',
-      content: 'Crie um conteúdo para [PLATAFORMA] sobre [TÓPICO] que seja: 1) Envolvente e interessante, 2) Otimizado para SEO, 3) Adequado para o público-alvo [PÚBLICO], 4) Com tom [TOM]'
+      content: 'Crie um conteúdo para [PLATAFORMA] sobre [TÓPICO] que seja: 1) Envolvente e interessante, 2) Otimizado para SEO, 3) Adequado para o público-alvo [PÚBLICO], 4) Com tom [TOM]',
+      category: 'Marketing'
     },
     {
       id: '3',
       name: 'Resolução de Problemas',
       description: 'Template para resolução estruturada de problemas',
-      content: 'Ajude-me a resolver o seguinte problema: [PROBLEMA]\n\nPor favor, forneça: 1) Análise do problema, 2) Possíveis soluções, 3) Prós e contras de cada solução, 4) Recomendação final'
+      content: 'Ajude-me a resolver o seguinte problema: [PROBLEMA]\n\nPor favor, forneça: 1) Análise do problema, 2) Possíveis soluções, 3) Prós e contras de cada solução, 4) Recomendação final',
+      category: 'Negócios'
     }
   ])
 
@@ -134,7 +118,7 @@ export const usePromptStore = defineStore('prompt', () => {
       error.value = null
       
       const apiResponse = await promptService.getPrompts()
-      prompts.value = apiResponse.prompts.map(convertApiPromptToFrontend)
+      prompts.value = apiResponse.map(convertApiPromptToFrontend)
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Erro ao carregar prompts'
       throw err

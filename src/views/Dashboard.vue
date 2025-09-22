@@ -17,6 +17,7 @@ onMounted(async () => {
   await promptStore.fetchPrompts()
 })
 
+
 const stats = computed(() => ({
   total: promptStore.prompts.length,
   favorites: promptStore.favoritePrompts.length,
