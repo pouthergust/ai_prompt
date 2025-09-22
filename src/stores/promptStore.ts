@@ -118,7 +118,7 @@ export const usePromptStore = defineStore('prompt', () => {
       error.value = null
       
       const apiResponse = await promptService.getPrompts()
-      prompts.value = apiResponse.prompts.map(convertApiPromptToFrontend)
+      prompts.value = apiResponse.map(convertApiPromptToFrontend)
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Erro ao carregar prompts'
       throw err

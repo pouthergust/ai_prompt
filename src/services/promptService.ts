@@ -6,12 +6,12 @@ class PromptService {
   /**
    * Listar todos os prompts do usuário
    */
-  async getPrompts(page = 1, limit = 10): Promise<PromptListResponse> {
+  async getPrompts(page = 1, limit = 10): Promise<ApiPrompt[]> {
     try {
-      const response = await api.get<ApiResponse<PromptListResponse>>('/prompts', {
+      const response = await api.get<ApiPrompt[]>('/prompts', {
         params: { page, limit }
       })
-      return response.data.data
+      return response.data
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError<ApiError>)
       throw new Error(errorMessage)

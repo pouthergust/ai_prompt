@@ -73,7 +73,7 @@ export interface UpdatePromptData {
 }
 
 export interface PromptListResponse {
-  prompts: ApiPrompt[]
+  data: ApiPrompt[]
   total: number
   page: number
   limit: number

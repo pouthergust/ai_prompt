@@ -67,8 +67,8 @@ api.interceptors.response.use(
         isRedirecting = true
         
         // Limpar dados de autenticação
-        localStorage.removeItem('auth_token')
-        localStorage.removeItem('user_data')
+        // localStorage.removeItem('auth_token')
+        // localStorage.removeItem('user_data')
         
         // Redirecionar para login
         if (typeof window !== 'undefined') {

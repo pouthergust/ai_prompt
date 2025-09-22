@@ -15,7 +15,11 @@ const promptStore = usePromptStore()
 
 onMounted(async () => {
   await promptStore.fetchPrompts()
+
+  console.log("Prompts carregados:", promptStore.prompts)
+  console.log("Prompts Recentes carregados:", promptStore.recentPrompts)
 })
+
 
 const stats = computed(() => ({
   total: promptStore.prompts.length,
