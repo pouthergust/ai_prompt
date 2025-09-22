@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue'
-import { useAIRecommendationStore, type AITool } from '../stores/aiRecommendationStore'
+import { useAIRecommendationStore } from '../stores/aiRecommendationStore'
+import type { AITool } from '../types'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
 const aiStore = useAIRecommendationStore()

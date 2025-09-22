@@ -9,7 +9,8 @@ import {
   XMarkIcon
 } from '@heroicons/vue/24/outline'
 import { HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
-import { usePromptStore, type Prompt } from '../stores/promptStore'
+import { usePromptStore } from '../stores/promptStore'
+import type { Prompt } from '../types'
 import { useAIRecommendationStore } from '../stores/aiRecommendationStore'
 import AIRecommendationCard from './AIRecommendationCard.vue'
 
@@ -47,7 +48,7 @@ const saveEdit = async () => {
     title: editForm.value.title,
     content: editForm.value.content,
     category: editForm.value.category,
-    tags: editForm.value.tags.split(',').map(tag => tag.trim()).filter(Boolean)
+    tags: editForm.value.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean)
   })
   isEditing.value = false
 }
