@@ -1,19 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-
-export interface AITool {
-  id: string
-  name: string
-  description: string
-  category: string
-  website: string
-  logo: string
-  features: string[]
-  pricing: 'free' | 'freemium' | 'paid'
-  bestFor: string[]
-  rating: number
-  isPopular: boolean
-}
+import type { AITool } from '../types'
 
 export const useAIRecommendationStore = defineStore('aiRecommendation', () => {
   const aiTools = ref<AITool[]>([

@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import promptService from '../services/promptService'
-import type { Prompt as ApiPrompt, CreatePromptData, UpdatePromptData } from '../services/promptService'
-
-export interface Prompt {
-  id: string
-  title: string
-  content: string
-  category: string
-  tags: string[]
-  isFavorite: boolean
-  createdAt: Date
-  updatedAt: Date
-}
+import type { ApiPrompt, Prompt, CreatePromptData, UpdatePromptData, PromptFilter } from '../types'
 
 // Função para converter dados da API para o formato do frontend
 const convertApiPromptToFrontend = (apiPrompt: ApiPrompt): Prompt => ({
@@ -25,14 +14,6 @@ const convertApiPromptToFrontend = (apiPrompt: ApiPrompt): Prompt => ({
   createdAt: new Date(apiPrompt.created_at),
   updatedAt: new Date(apiPrompt.updated_at)
 })
-
-export interface PromptFilter {
-  search: string
-  category: string
-  showFavorites: boolean
-  sortBy: 'createdAt' | 'updatedAt' | 'title'
-  sortOrder: 'asc' | 'desc'
-}
 
 export const usePromptStore = defineStore('prompt', () => {
   const prompts = ref<Prompt[]>([])
