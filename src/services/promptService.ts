@@ -1,6 +1,6 @@
 import api, { handleApiError } from './api'
 import { AxiosError } from 'axios'
-import type { ApiPrompt, CreatePromptData, UpdatePromptData, PromptListResponse, ApiResponse, ApiError} from '../types'
+import type { ApiPrompt, CreatePromptData, UpdatePromptData, ApiResponse, ApiError} from '../types'
 
 class PromptService {
   /**
