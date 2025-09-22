@@ -42,19 +42,22 @@ export const usePromptStore = defineStore('prompt', () => {
       id: '1',
       name: 'Análise de Código',
       description: 'Template para análise e revisão de código',
-      content: 'Analise o seguinte código e forneça feedback sobre: 1) Qualidade do código, 2) Possíveis melhorias, 3) Bugs potenciais, 4) Padrões de design:\n\n[CÓDIGO]'
+      content: 'Analise o seguinte código e forneça feedback sobre: 1) Qualidade do código, 2) Possíveis melhorias, 3) Bugs potenciais, 4) Padrões de design:\n\n[CÓDIGO]',
+      category: 'Desenvolvimento'
     },
     {
       id: '2',
       name: 'Criação de Conteúdo',
       description: 'Template para criação de conteúdo de marketing',
-      content: 'Crie um conteúdo para [PLATAFORMA] sobre [TÓPICO] que seja: 1) Envolvente e interessante, 2) Otimizado para SEO, 3) Adequado para o público-alvo [PÚBLICO], 4) Com tom [TOM]'
+      content: 'Crie um conteúdo para [PLATAFORMA] sobre [TÓPICO] que seja: 1) Envolvente e interessante, 2) Otimizado para SEO, 3) Adequado para o público-alvo [PÚBLICO], 4) Com tom [TOM]',
+      category: 'Marketing'
     },
     {
       id: '3',
       name: 'Resolução de Problemas',
       description: 'Template para resolução estruturada de problemas',
-      content: 'Ajude-me a resolver o seguinte problema: [PROBLEMA]\n\nPor favor, forneça: 1) Análise do problema, 2) Possíveis soluções, 3) Prós e contras de cada solução, 4) Recomendação final'
+      content: 'Ajude-me a resolver o seguinte problema: [PROBLEMA]\n\nPor favor, forneça: 1) Análise do problema, 2) Possíveis soluções, 3) Prós e contras de cada solução, 4) Recomendação final',
+      category: 'Negócios'
     }
   ])
 

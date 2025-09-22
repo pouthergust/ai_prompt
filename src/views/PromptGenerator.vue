@@ -35,7 +35,7 @@ const saveGenerated = async () => {
     await promptStore.addPrompt({
       title: `${template?.name || 'Prompt'} - ${new Date().toLocaleDateString()}`,
       content: generatedPrompt.value,
-      category: 'Gerado',
+      category: promptStore.templates.find(t => t.id === selectedTemplate.value)?.category || 'Outros',
       tags: ['gerado', 'template'],
       isFavorite: false
     })
